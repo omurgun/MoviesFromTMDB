@@ -14,8 +14,8 @@
             android:id="@+id/action_popularMoviesFragment_to_movieDetailFragment"
             app:destination="@id/movieDetailFragment" />
         <action
-            android:id="@+id/action_popularMoviesFragment_to_likedMoviesFragment"
-            app:destination="@id/likedMoviesFragment" />
+            android:id="@+id/action_popularMoviesFragment_to_favoriteMoviesFragment"
+            app:destination="@id/favoriteMoviesFragment" />
     </fragment>
     <fragment
         android:id="@+id/movieDetailFragment"
@@ -27,8 +27,8 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/likedMoviesFragment"
-        android:name="com.omurgun.moviesfromtmdb.ui.fragments.LikedMoviesFragment"
-        android:label="fragment_liked_movies"
-        tools:layout="@layout/fragment_liked_movies" />
+        android:id="@+id/favoriteMoviesFragment"
+        android:name="com.omurgun.moviesfromtmdb.ui.fragments.FavoriteMoviesFragment"
+        android:label="fragment_favorite_movies"
+        tools:layout="@layout/fragment_favorite_movies" />
 </navigation>

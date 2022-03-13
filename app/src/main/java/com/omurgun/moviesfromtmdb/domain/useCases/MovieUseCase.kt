@@ -5,9 +5,11 @@ import androidx.lifecycle.asLiveData
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovies
+import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovies
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
 import com.omurgun.moviesfromtmdb.util.ResultData
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +20,7 @@ import java.io.IOError
 import javax.inject.Inject
 
 class MovieUseCase @Inject constructor(private val movieRepository: IMovieRepository) {
+
     fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail) : Flow<ResultData<ResponseMovie>> = flow {
         try {
             emit(ResultData.Loading())
@@ -53,6 +56,48 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
             emit(ResultData.Exception(message = "Could not reach internet"))
         }
     }
+
+
+    fun getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies : RequestGetSimilarMovies) : Flow<ResultData<ResponseSimilarMovies>> = flow {
+        try {
+            emit(ResultData.Loading())
+            val similarMovies = movieRepository.getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies)
+            emit(ResultData.Success(similarMovies))
+        } catch (e: HttpException) {
+            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
+        } catch (e: IOError) {
+            emit(ResultData.Exception(message = "Could not reach internet"))
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     fun getMovieFromRoom(movieId: Int) : LiveData<ResultData<ResponseMovie>> = flow {

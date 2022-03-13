@@ -29,5 +29,48 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
+
+
+        binding.bottomNavigationView.selectedItemId = R.id.navigation_home
+
+
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    navController.navigate(R.id.popularMoviesFragment)
+                    binding.bottomNavigationView.menu.getItem(0).isChecked = true
+
+                }
+                R.id.navigation_favorite -> {
+                    navController.navigate(R.id.favoriteMoviesFragment)
+                    binding.bottomNavigationView.menu.getItem(1).isChecked = true
+
+                }
+            }
+            false
+
+        }
+    }
+
+    private fun setCurrentBottomTab(){
+        when (navController.currentBackStackEntry?.destination?.label) {
+            "fragment_popular_movies" -> {
+
+                binding.bottomNavigationView.menu.getItem(0).isChecked = true
+
+            }
+            "fragment_favorite_movies" -> {
+
+                binding.bottomNavigationView.menu.getItem(1).isChecked = true
+
+            }
+
+        }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        setCurrentBottomTab()
     }
 }

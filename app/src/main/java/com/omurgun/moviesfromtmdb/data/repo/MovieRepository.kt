@@ -1,14 +1,17 @@
 package com.omurgun.moviesfromtmdb.data.repo
 
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_MOVIE_IMAGES
+import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_SIMILAR_MOVIE
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.GET_MOVIE
 import com.omurgun.moviesfromtmdb.data.local.room.MovieDao
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovies
+import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovies
 import com.omurgun.moviesfromtmdb.data.remote.TMDBService
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
 import javax.inject.Inject
@@ -55,6 +58,10 @@ class MovieRepository @Inject constructor(
 
     override suspend fun getMovieImagesByMovieIdFromAPI(requestGetMovieImages: RequestGetMovieImages): ResponseMovieImages {
         return tmdbService.getMovieImages("$GET_MOVIE/${requestGetMovieImages.movieId}/${CONSTANTS_MOVIE_IMAGES}")
+    }
+
+    override suspend fun getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies: RequestGetSimilarMovies): ResponseSimilarMovies {
+        return tmdbService.getSimilarMovies("$GET_MOVIE/${requestGetSimilarMovies.movieId}/$CONSTANTS_SIMILAR_MOVIE", currentPageCount = requestGetSimilarMovies.currentPageCount)
     }
 
 }

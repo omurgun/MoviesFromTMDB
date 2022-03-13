@@ -1,14 +1,17 @@
 package com.omurgun.moviesfromtmdb.ui.fragments
 
+
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.omurgun.moviesfromtmdb.databinding.FragmentLikedMoviesBinding
+import androidx.fragment.app.Fragment
+import com.omurgun.moviesfromtmdb.databinding.FragmentFavoriteMoviesBinding
 
-class LikedMoviesFragment : Fragment() {
-    private var _binding: FragmentLikedMoviesBinding? = null
+
+
+class FavoriteMoviesFragment : Fragment() {
+    private var _binding: FragmentFavoriteMoviesBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -16,7 +19,7 @@ class LikedMoviesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLikedMoviesBinding.inflate(inflater,container,false)
+        _binding = FragmentFavoriteMoviesBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -31,5 +34,4 @@ class LikedMoviesFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }

@@ -21,7 +21,7 @@ class VerticalMovieViewHolder (private val binding: ItemVerticalMovieImageBindin
             adapter = horizontalMovieImageAdapter
         }
         horizontalMovieImageAdapter.items = movieImageItem.horizontalMovieImageItems
-        horizontalMovieImageAdapter.movieImages = movieImageItem.movieImages
+        horizontalMovieImageAdapter.movieImages = movieImageItem.movieImages ?: listOf()
         binding.title.titleTextView.text = movieImageItem.titleItem.title
     }
 
