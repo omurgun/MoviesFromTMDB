@@ -2,7 +2,7 @@ package com.omurgun.moviesfromtmdb.data.models.response
 
 import com.google.gson.annotations.SerializedName
 
-data class ResponseMovieImageBackdrop(
+data class ResponseMovieImage(
     @SerializedName("height")
     val height : Int,
     @SerializedName("width")

@@ -1,11 +1,13 @@
 package com.omurgun.moviesfromtmdb.data.repo
 
-import androidx.lifecycle.LiveData
+import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_MOVIE_IMAGES
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.GET_MOVIE
 import com.omurgun.moviesfromtmdb.data.local.room.MovieDao
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovie
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
+import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovies
 import com.omurgun.moviesfromtmdb.data.remote.TMDBService
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
@@ -43,12 +45,16 @@ class MovieRepository @Inject constructor(
         movieDao.deleteAllMovies()
     }
 
-    override suspend fun getMovieFromAPI(requestMovie: RequestGetMovie): ResponseMovie {
-        return tmdbService.getMovie("$GET_MOVIE/${requestMovie.movieId}")
+    override suspend fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail): ResponseMovie {
+        return tmdbService.getMovieDetail("$GET_MOVIE/${requestMovieDetail.movieId}")
     }
 
     override suspend fun getPopularMoviesFromAPI(requestGetPopularMovies: RequestGetPopularMovies): ResponsePopularMovies {
         return tmdbService.getPopularMovies(currentPageCount = requestGetPopularMovies.currentPageCount)
+    }
+
+    override suspend fun getMovieImagesByMovieIdFromAPI(requestGetMovieImages: RequestGetMovieImages): ResponseMovieImages {
+        return tmdbService.getMovieImages("$GET_MOVIE/${requestGetMovieImages.movieId}/${CONSTANTS_MOVIE_IMAGES}")
     }
 
 }

@@ -1,6 +1,6 @@
 package com.omurgun.moviesfromtmdb.data.models.request
 
-data class RequestGetMovie(
+data class RequestGetMovieImages(
     val movieId : Int
 ){
 }

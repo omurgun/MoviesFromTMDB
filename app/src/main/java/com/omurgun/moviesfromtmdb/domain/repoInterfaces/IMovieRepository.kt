@@ -1,9 +1,10 @@
 package com.omurgun.moviesfromtmdb.domain.repoInterfaces
 
-import androidx.lifecycle.LiveData
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovie
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
+import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovies
 
 interface IMovieRepository {
@@ -14,6 +15,7 @@ interface IMovieRepository {
     suspend fun updateMovieFromRoom(movie : ResponseMovie)
     suspend fun deleteMovieFromRoom(movie: ResponseMovie)
     suspend fun deleteAllMoviesFromRoom()
-    suspend fun getMovieFromAPI(requestMovie: RequestGetMovie) : ResponseMovie
+    suspend fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail) : ResponseMovie
     suspend fun getPopularMoviesFromAPI(requestGetPopularMovies: RequestGetPopularMovies) : ResponsePopularMovies
+    suspend fun getMovieImagesByMovieIdFromAPI(requestGetMovieImages : RequestGetMovieImages) : ResponseMovieImages
 }

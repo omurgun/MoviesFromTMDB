@@ -17,6 +17,7 @@ import com.omurgun.moviesfromtmdb.ui.viewModelFactory.ViewModelFactory
 import com.omurgun.moviesfromtmdb.ui.viewModels.PopularMoviesViewModel
 import com.omurgun.moviesfromtmdb.util.ResultData
 import com.omurgun.moviesfromtmdb.util.makeGone
+import com.omurgun.moviesfromtmdb.util.makeInVisible
 import com.omurgun.moviesfromtmdb.util.makeVisible
 import javax.inject.Inject
 
@@ -69,18 +70,22 @@ class PopularMoviesFragment @Inject constructor(
                 is ResultData.Loading -> {
                     println("loading")
                     binding.popularMoviesLoading.makeVisible()
+                    binding.popularMoviesContainer.makeInVisible()
                 }
                 is ResultData.Success -> {
-                    binding.popularMoviesLoading.makeGone()
+
                     println("Success")
                     println("data : ${it.data}")
                     Toast.makeText(requireContext(),"movies get from API",Toast.LENGTH_SHORT).show()
                     popularMovieAdapter.popularMovies = it.data?.popularMovies!!
                     savePopularMoviesFromRoom(it.data.popularMovies)
+                    binding.popularMoviesLoading.makeGone()
+                    binding.popularMoviesContainer.makeVisible()
                 }
                 is ResultData.Exception -> {
-                    binding.popularMoviesLoading.makeGone()
                     println("Exception")
+                    binding.popularMoviesLoading.makeGone()
+                    binding.popularMoviesContainer.makeVisible()
 
                 }
             }
@@ -115,6 +120,8 @@ class PopularMoviesFragment @Inject constructor(
         data.observe(viewLifecycleOwner) {
             when (it) {
                 is ResultData.Loading -> {
+                    binding.popularMoviesLoading.makeVisible()
+                    binding.popularMoviesContainer.makeInVisible()
                     println("loading")
                 }
                 is ResultData.Success -> {
@@ -122,11 +129,15 @@ class PopularMoviesFragment @Inject constructor(
                     println("data : ${it.data}")
                     Toast.makeText(requireContext(),"movies get from room",Toast.LENGTH_SHORT).show()
                     popularMovieAdapter.popularMovies = it.data!!
+                    binding.popularMoviesLoading.makeGone()
+                    binding.popularMoviesContainer.makeVisible()
 
 
                 }
                 is ResultData.Exception -> {
                     println("Exception")
+                    binding.popularMoviesLoading.makeGone()
+                    binding.popularMoviesContainer.makeVisible()
 
                 }
             }

@@ -15,7 +15,7 @@ import retrofit2.http.Url
 
 interface TMDBService {
     @GET
-    suspend fun getMovie(@Url url:String, @Query(CONSTANTS_API_KEY) apiKey: String = SECRET_API_KEY_VALUE)  : ResponseMovie
+    suspend fun getMovieDetail(@Url url:String, @Query(CONSTANTS_API_KEY) apiKey: String = SECRET_API_KEY_VALUE)  : ResponseMovie
 
     @GET(GET_POPULAR_MOVIES)
     suspend fun getPopularMovies(@Query(CONSTANTS_API_KEY) apiKey: String = SECRET_API_KEY_VALUE,@Query(CONSTANTS_PAGE) currentPageCount: Int) : ResponsePopularMovies

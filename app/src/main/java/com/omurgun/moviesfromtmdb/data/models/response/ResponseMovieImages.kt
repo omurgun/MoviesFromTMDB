@@ -6,11 +6,11 @@ data class ResponseMovieImages(
     @SerializedName("id")
     val movieId : Int,
     @SerializedName("backdrops")
-    val backdrops : ArrayList<ResponseMovieImageBackdrop>,
+    val backdrops : List<ResponseMovieImage>,
     @SerializedName("logos")
-    val logos : ArrayList<ResponseMovieImageLogo>,
+    val logos : List<ResponseMovieImage>,
     @SerializedName("posters")
-    val posters : ArrayList<ResponseMovieImagePoster>
+    val posters : List<ResponseMovieImage>
 
 ) {
 }
