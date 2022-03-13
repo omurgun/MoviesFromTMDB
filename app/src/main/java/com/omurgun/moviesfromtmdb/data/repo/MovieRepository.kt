@@ -4,6 +4,7 @@ import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTAN
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_SIMILAR_MOVIE
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.GET_MOVIE
 import com.omurgun.moviesfromtmdb.data.local.room.MovieDao
+import com.omurgun.moviesfromtmdb.data.local.room.SimilarMovieDao
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
@@ -18,8 +19,10 @@ import javax.inject.Inject
 
 class MovieRepository @Inject constructor(
     private val tmdbService: TMDBService,
-    private val movieDao : MovieDao
-) : IMovieRepository {
+    private val movieDao : MovieDao,
+    private val similarMovieDao : SimilarMovieDao
+
+    ) : IMovieRepository {
     override fun getAllMoviesFromRoom(): List<ResponseMovie> {
         return movieDao.getAllMovies()
     }
@@ -46,6 +49,14 @@ class MovieRepository @Inject constructor(
 
     override suspend fun deleteAllMoviesFromRoom() {
         movieDao.deleteAllMovies()
+    }
+
+    override fun getAllFavoriteMoviesFromRoom(): List<ResponseMovie> {
+        return similarMovieDao.getAllFavoriteMovies().map { it.toResponseMovie() }
+    }
+
+    override suspend fun insertFavoriteMovieToRoom(movie: ResponseMovie) : Long {
+       return similarMovieDao.insertFavoriteMovie(movie.toInternalFavoriteMovie())
     }
 
     override suspend fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail): ResponseMovie {

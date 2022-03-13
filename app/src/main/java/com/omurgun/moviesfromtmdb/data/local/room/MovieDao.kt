@@ -1,6 +1,5 @@
 package com.omurgun.moviesfromtmdb.data.local.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 

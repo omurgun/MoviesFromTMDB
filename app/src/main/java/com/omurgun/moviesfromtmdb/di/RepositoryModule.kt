@@ -1,6 +1,7 @@
 package com.omurgun.moviesfromtmdb.di
 
 import com.omurgun.moviesfromtmdb.data.local.room.MovieDao
+import com.omurgun.moviesfromtmdb.data.local.room.SimilarMovieDao
 import com.omurgun.moviesfromtmdb.data.remote.TMDBService
 import com.omurgun.moviesfromtmdb.data.repo.MovieRepository
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
@@ -16,5 +17,5 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideMovieRepo(api: TMDBService,dao : MovieDao) = MovieRepository(api,dao) as IMovieRepository
+    fun provideMovieRepo(api: TMDBService,movieDao : MovieDao,similarMovieDao: SimilarMovieDao) = MovieRepository(api,movieDao,similarMovieDao) as IMovieRepository
 }

@@ -30,4 +30,9 @@ class MovieDetailViewModel @Inject constructor(private val movieUseCase: MovieUs
         return movieUseCase.getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies).asLiveData(Dispatchers.IO)
     }
 
+    fun saveFavoriteMovieToRoom(movie : ResponseMovie) : LiveData<ResultData<Long>> {
+        return movieUseCase.insertFavoriteMovieToRoom(movie)
+    }
+
+
 }

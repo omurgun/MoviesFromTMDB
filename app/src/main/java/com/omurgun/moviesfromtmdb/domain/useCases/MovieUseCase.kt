@@ -139,6 +139,32 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
     }.asLiveData(Dispatchers.IO)
 
 
+    fun insertFavoriteMovieToRoom(movie : ResponseMovie) : LiveData<ResultData<Long>> = flow {
+        try {
+            emit(ResultData.Loading())
+            val favoriteMovie = movieRepository.insertFavoriteMovieToRoom(movie)
+            emit(ResultData.Success(favoriteMovie))
+        } catch (e: HttpException) {
+            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
+        } catch (e: IOError) {
+            emit(ResultData.Exception(message = "Could not reach internet"))
+        }
+    }.asLiveData(Dispatchers.IO)
+
+
+    fun getAllFavoriteMoviesFromRoom() : LiveData<ResultData<List<ResponseMovie>>> = flow {
+        try {
+            emit(ResultData.Loading())
+            val favoriteMovies = movieRepository.getAllFavoriteMoviesFromRoom()
+            emit(ResultData.Success(favoriteMovies))
+        } catch (e: HttpException) {
+            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
+        } catch (e: IOError) {
+            emit(ResultData.Exception(message = "Could not reach internet"))
+        }
+    }.asLiveData(Dispatchers.IO)
+
+
 
 
 

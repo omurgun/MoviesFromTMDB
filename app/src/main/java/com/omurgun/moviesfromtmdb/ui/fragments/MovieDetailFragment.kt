@@ -19,6 +19,7 @@ import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
+import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImage
 import com.omurgun.moviesfromtmdb.databinding.FragmentMovieDetailBinding
 import com.omurgun.moviesfromtmdb.ui.adapters.recyclerViewAdapter.movieImagesAdapter.VerticalMovieImageAdapter
@@ -37,6 +38,7 @@ class MovieDetailFragment @Inject constructor(
     private val verticalMovieImageAdapter : VerticalMovieImageAdapter = VerticalMovieImageAdapter()
     private var movieId : Int? = null
     private var verticalItems = arrayListOf<InternalVerticalMovieItem>()
+    private lateinit var currentMovie : ResponseMovie
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,6 +81,8 @@ class MovieDetailFragment @Inject constructor(
 
         binding.favoriteImage.setOnClickListener {
             binding.favoriteImage.setImageResource(R.drawable.ic_baseline_fill_white_favorite_24)
+
+            saveFavoriteMovieToRoom(currentMovie)
         }
     }
 
@@ -97,12 +101,13 @@ class MovieDetailFragment @Inject constructor(
 
                     println("Success")
                     println("data : ${it.data}")
+                    currentMovie = it.data!!
 
-                    binding.movieImage.downloadFromUrl(IMAGES_BASE_URL + it.data?.posterPath,null)
-                    binding.movieTitle.text = it.data?.title
-                    binding.movieReleaseDate.text = it.data?.releaseDate
-                    binding.movieAverageVote.text = it.data?.averageVote.toString()
-                    binding.movieDescription.text = it.data?.description
+                    binding.movieImage.downloadFromUrl(IMAGES_BASE_URL + it.data.posterPath,null)
+                    binding.movieTitle.text = it.data.title
+                    binding.movieReleaseDate.text = it.data.releaseDate
+                    binding.movieAverageVote.text = it.data.averageVote.toString()
+                    binding.movieDescription.text = it.data.description
 
 
                     Toast.makeText(requireContext(),"get movie from API", Toast.LENGTH_SHORT).show()
@@ -227,6 +232,35 @@ class MovieDetailFragment @Inject constructor(
 
                     Toast.makeText(requireContext(),"get similar movie from API", Toast.LENGTH_SHORT).show()
 
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun saveFavoriteMovieToRoom(movie : ResponseMovie){
+        val data = movieDetailViewModel.saveFavoriteMovieToRoom(movie)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("data : ${it.data}")
+                    Toast.makeText(requireContext(),"save movie to room", Toast.LENGTH_SHORT).show()
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
 

@@ -25,4 +25,10 @@ object RoomModule {
     fun injectMovieDao(
         database: MovieDatabase
     ) = database.movieDao()
+
+    @Singleton
+    @Provides
+    fun injectSimilarMovieDao(
+        database: MovieDatabase
+    ) = database.similarMovieDao()
 }
