@@ -34,5 +34,19 @@ class MovieDetailViewModel @Inject constructor(private val movieUseCase: MovieUs
         return movieUseCase.insertFavoriteMovieToRoom(movie)
     }
 
+    fun getMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> {
+        return movieUseCase.getMovieFromRoom(requestMovieDetail)
+    }
+
+    fun getFavoriteMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> {
+        return movieUseCase.getFavoriteMovieFromRoom(requestMovieDetail)
+    }
+
+    fun deleteFavoriteMovieFromRoom(movie : ResponseMovie) : LiveData<ResultData<Int>> {
+        return movieUseCase.deleteFavoriteMovieFromRoom(movie)
+    }
+
+
+
 
 }

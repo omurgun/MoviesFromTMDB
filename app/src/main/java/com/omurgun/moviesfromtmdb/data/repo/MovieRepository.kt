@@ -51,14 +51,6 @@ class MovieRepository @Inject constructor(
         movieDao.deleteAllMovies()
     }
 
-    override fun getAllFavoriteMoviesFromRoom(): List<ResponseMovie> {
-        return similarMovieDao.getAllFavoriteMovies().map { it.toResponseMovie() }
-    }
-
-    override suspend fun insertFavoriteMovieToRoom(movie: ResponseMovie) : Long {
-       return similarMovieDao.insertFavoriteMovie(movie.toInternalFavoriteMovie())
-    }
-
     override suspend fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail): ResponseMovie {
         return tmdbService.getMovieDetail("$GET_MOVIE/${requestMovieDetail.movieId}")
     }
@@ -73,6 +65,22 @@ class MovieRepository @Inject constructor(
 
     override suspend fun getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies: RequestGetSimilarMovies): ResponseSimilarMovies {
         return tmdbService.getSimilarMovies("$GET_MOVIE/${requestGetSimilarMovies.movieId}/$CONSTANTS_SIMILAR_MOVIE", currentPageCount = requestGetSimilarMovies.currentPageCount)
+    }
+
+    override fun getAllFavoriteMoviesFromRoom(): List<ResponseMovie> {
+        return similarMovieDao.getAllFavoriteMovies().map { it.toResponseMovie() }
+    }
+
+    override fun getFavoriteMovieFromRoom(movieId: Int): ResponseMovie? {
+        return similarMovieDao.getFavoriteMovie(movieId)?.toResponseMovie()
+    }
+
+    override suspend fun insertFavoriteMovieToRoom(movie: ResponseMovie) : Long {
+        return similarMovieDao.insertFavoriteMovie(movie.toInternalFavoriteMovie())
+    }
+
+    override suspend fun deleteFavoriteMovieFromRoom(movie: ResponseMovie): Int {
+        return similarMovieDao.deleteFavoriteMovie(movie.toInternalFavoriteMovie())
     }
 
 }

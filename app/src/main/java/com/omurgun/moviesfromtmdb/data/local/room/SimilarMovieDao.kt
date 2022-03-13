@@ -11,7 +11,7 @@ interface SimilarMovieDao {
     fun getAllFavoriteMovies() : List<InternalFavoriteMovie>
 
     @Query("SELECT * FROM favoriteMovies WHERE id = :id")
-    fun getFavoriteMovie(id : Int) : InternalFavoriteMovie
+    fun getFavoriteMovie(id : Int) : InternalFavoriteMovie?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllFavoriteMovies(vararg favoriteMovies: InternalFavoriteMovie) : List<Long>
@@ -26,7 +26,7 @@ interface SimilarMovieDao {
     suspend fun deleteAllFavoriteMovies()
 
     @Delete
-    suspend fun deleteFavoriteMovie(favoriteMovies: InternalFavoriteMovie)
+    suspend fun deleteFavoriteMovie(favoriteMovies: InternalFavoriteMovie) : Int
 
 
 

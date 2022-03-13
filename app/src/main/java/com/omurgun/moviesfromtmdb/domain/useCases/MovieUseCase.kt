@@ -71,39 +71,10 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    fun getMovieFromRoom(movieId: Int) : LiveData<ResultData<ResponseMovie>> = flow {
+    fun getMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> = flow {
         try {
             emit(ResultData.Loading())
-            val movie = movieRepository.getMovieFromRoom(movieId)
+            val movie = movieRepository.getMovieFromRoom(requestMovieDetail.movieId)
             emit(ResultData.Success(movie))
         } catch (e: HttpException) {
             emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
@@ -139,6 +110,43 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
     }.asLiveData(Dispatchers.IO)
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    fun getFavoriteMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> = flow {
+        try {
+            emit(ResultData.Loading())
+            val movie = movieRepository.getFavoriteMovieFromRoom(requestMovieDetail.movieId)
+            emit(ResultData.Success(movie))
+        } catch (e: HttpException) {
+            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
+        } catch (e: IOError) {
+            emit(ResultData.Exception(message = "Could not reach internet"))
+        }
+    }.asLiveData(Dispatchers.IO)
+
+
     fun insertFavoriteMovieToRoom(movie : ResponseMovie) : LiveData<ResultData<Long>> = flow {
         try {
             emit(ResultData.Loading())
@@ -163,6 +171,20 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
             emit(ResultData.Exception(message = "Could not reach internet"))
         }
     }.asLiveData(Dispatchers.IO)
+
+
+    fun deleteFavoriteMovieFromRoom(movie : ResponseMovie) : LiveData<ResultData<Int>> = flow {
+        try {
+            emit(ResultData.Loading())
+            val favoriteMovies = movieRepository.deleteFavoriteMovieFromRoom(movie)
+            emit(ResultData.Success(favoriteMovies))
+        } catch (e: HttpException) {
+            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
+        } catch (e: IOError) {
+            emit(ResultData.Exception(message = "Could not reach internet"))
+        }
+    }.asLiveData(Dispatchers.IO)
+
 
 
 

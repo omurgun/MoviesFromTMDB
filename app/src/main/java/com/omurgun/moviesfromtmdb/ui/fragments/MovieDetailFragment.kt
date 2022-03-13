@@ -39,6 +39,7 @@ class MovieDetailFragment @Inject constructor(
     private var movieId : Int? = null
     private var verticalItems = arrayListOf<InternalVerticalMovieItem>()
     private lateinit var currentMovie : ResponseMovie
+    private var currentMovieIsFavorite : Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,10 +55,11 @@ class MovieDetailFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        getMovieDetailFromAPI(RequestGetMovieDetail(movieId!!))
-        getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
-        getMovieImagesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
-
+        getMovieFromRoom(RequestGetMovieDetail(movieId!!))
+        getFavoriteMovieFromRoom(RequestGetMovieDetail(movieId!!))
+        //getMovieDetailFromAPI(RequestGetMovieDetail(movieId!!))
+        //getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
+        //getMovieImagesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
 
     }
 
@@ -80,9 +82,16 @@ class MovieDetailFragment @Inject constructor(
         }
 
         binding.favoriteImage.setOnClickListener {
-            binding.favoriteImage.setImageResource(R.drawable.ic_baseline_fill_white_favorite_24)
+            if(currentMovieIsFavorite)
+            {
+                deleteFavoriteMovieFromRoom(currentMovie)
+            }
+            else
+            {
 
-            saveFavoriteMovieToRoom(currentMovie)
+                saveFavoriteMovieToRoom(currentMovie)
+            }
+
         }
     }
 
@@ -103,11 +112,7 @@ class MovieDetailFragment @Inject constructor(
                     println("data : ${it.data}")
                     currentMovie = it.data!!
 
-                    binding.movieImage.downloadFromUrl(IMAGES_BASE_URL + it.data.posterPath,null)
-                    binding.movieTitle.text = it.data.title
-                    binding.movieReleaseDate.text = it.data.releaseDate
-                    binding.movieAverageVote.text = it.data.averageVote.toString()
-                    binding.movieDescription.text = it.data.description
+                    updateUI(it.data)
 
 
                     Toast.makeText(requireContext(),"get movie from API", Toast.LENGTH_SHORT).show()
@@ -260,6 +265,7 @@ class MovieDetailFragment @Inject constructor(
                 is ResultData.Success -> {
                     println("Success")
                     println("data : ${it.data}")
+                    binding.favoriteImage.setImageResource(R.drawable.ic_baseline_fill_white_favorite_24)
                     Toast.makeText(requireContext(),"save movie to room", Toast.LENGTH_SHORT).show()
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
@@ -274,6 +280,113 @@ class MovieDetailFragment @Inject constructor(
             }
         }
 
+    }
+
+    private fun getMovieFromRoom(requestMovieDetail: RequestGetMovieDetail){
+        val data = movieDetailViewModel.getMovieFromRoom(requestMovieDetail)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("getMovieFromRoom : ${it.data}")
+                    currentMovie = it.data!!
+                    updateUI(it.data)
+                    Toast.makeText(requireContext(),"get movie from room", Toast.LENGTH_SHORT).show()
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun getFavoriteMovieFromRoom(requestMovieDetail: RequestGetMovieDetail){
+        val data = movieDetailViewModel.getFavoriteMovieFromRoom(requestMovieDetail)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("getFavoriteMovieFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+                        binding.favoriteImage.setImageResource(R.drawable.ic_baseline_fill_white_favorite_24)
+                        currentMovieIsFavorite = true
+                    }
+                    Toast.makeText(requireContext(),"get movie from room", Toast.LENGTH_SHORT).show()
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun deleteFavoriteMovieFromRoom(movie : ResponseMovie){
+        val data = movieDetailViewModel.deleteFavoriteMovieFromRoom(movie)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("deleteFavoriteMovieFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+                        binding.favoriteImage.setImageResource(R.drawable.ic_baseline_favorite_border_24)
+                        currentMovieIsFavorite = false
+                    }
+                    Toast.makeText(requireContext(),"delete movie from room", Toast.LENGTH_SHORT).show()
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun updateUI(responseMovie : ResponseMovie){
+        binding.movieImage.downloadFromUrl(IMAGES_BASE_URL + responseMovie.posterPath,null)
+        binding.movieTitle.text = responseMovie.title
+        binding.movieReleaseDate.text = responseMovie.releaseDate
+        binding.movieAverageVote.text = responseMovie.averageVote.toString()
+        binding.movieDescription.text = responseMovie.description
     }
 
     override fun onDestroyView() {
