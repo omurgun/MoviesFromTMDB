@@ -17,7 +17,6 @@ import com.omurgun.moviesfromtmdb.data.models.internal.InternalTitleItem
 import com.omurgun.moviesfromtmdb.data.models.internal.InternalVerticalMovieItem
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImage
@@ -114,8 +113,6 @@ class MovieDetailFragment @Inject constructor(
 
                     updateUI(it.data)
 
-
-                    Toast.makeText(requireContext(),"get movie from API", Toast.LENGTH_SHORT).show()
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
 
@@ -188,7 +185,6 @@ class MovieDetailFragment @Inject constructor(
 
                     verticalMovieImageAdapter.verticalItems = verticalItems
 
-                    Toast.makeText(requireContext(),"get movie images from API", Toast.LENGTH_SHORT).show()
 
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
@@ -235,7 +231,6 @@ class MovieDetailFragment @Inject constructor(
 
                     verticalMovieImageAdapter.verticalItems = verticalItems
 
-                    Toast.makeText(requireContext(),"get similar movie from API", Toast.LENGTH_SHORT).show()
 
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
@@ -266,7 +261,6 @@ class MovieDetailFragment @Inject constructor(
                     println("Success")
                     println("data : ${it.data}")
                     binding.favoriteImage.setImageResource(R.drawable.ic_baseline_fill_white_favorite_24)
-                    Toast.makeText(requireContext(),"save movie to room", Toast.LENGTH_SHORT).show()
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
 
@@ -297,7 +291,6 @@ class MovieDetailFragment @Inject constructor(
                     println("getMovieFromRoom : ${it.data}")
                     currentMovie = it.data!!
                     updateUI(it.data)
-                    Toast.makeText(requireContext(),"get movie from room", Toast.LENGTH_SHORT).show()
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
 
@@ -331,7 +324,6 @@ class MovieDetailFragment @Inject constructor(
                         binding.favoriteImage.setImageResource(R.drawable.ic_baseline_fill_white_favorite_24)
                         currentMovieIsFavorite = true
                     }
-                    Toast.makeText(requireContext(),"get movie from room", Toast.LENGTH_SHORT).show()
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
 
@@ -365,7 +357,6 @@ class MovieDetailFragment @Inject constructor(
                         binding.favoriteImage.setImageResource(R.drawable.ic_baseline_favorite_border_24)
                         currentMovieIsFavorite = false
                     }
-                    Toast.makeText(requireContext(),"delete movie from room", Toast.LENGTH_SHORT).show()
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
 

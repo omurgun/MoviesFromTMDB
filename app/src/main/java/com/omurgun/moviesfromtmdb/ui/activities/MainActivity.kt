@@ -15,6 +15,7 @@ import dagger.hilt.android.EntryPointAccessors
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private var currentBottomTab = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val entryPoint = EntryPointAccessors.fromActivity(
@@ -32,22 +33,28 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.bottomNavigationView.selectedItemId = R.id.navigation_home
-
+        currentBottomTab = R.id.navigation_home
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            if (currentBottomTab != item.itemId)
+            {
+                currentBottomTab = item.itemId
+                when (item.itemId) {
 
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    navController.navigate(R.id.popularMoviesFragment)
-                    binding.bottomNavigationView.menu.getItem(0).isChecked = true
+                    R.id.navigation_home -> {
+                        navController.navigate(R.id.popularMoviesFragment)
+                        binding.bottomNavigationView.menu.getItem(0).isChecked = true
 
-                }
-                R.id.navigation_favorite -> {
-                    navController.navigate(R.id.favoriteMoviesFragment)
-                    binding.bottomNavigationView.menu.getItem(1).isChecked = true
 
+                    }
+                    R.id.navigation_favorite -> {
+                        navController.navigate(R.id.favoriteMoviesFragment)
+                        binding.bottomNavigationView.menu.getItem(1).isChecked = true
+
+                    }
                 }
             }
+
             false
 
         }
@@ -56,12 +63,12 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentBottomTab(){
         when (navController.currentBackStackEntry?.destination?.label) {
             "fragment_popular_movies" -> {
-
+                currentBottomTab = binding.bottomNavigationView.menu.getItem(0).itemId
                 binding.bottomNavigationView.menu.getItem(0).isChecked = true
 
             }
             "fragment_favorite_movies" -> {
-
+                currentBottomTab = binding.bottomNavigationView.menu.getItem(1).itemId
                 binding.bottomNavigationView.menu.getItem(1).isChecked = true
 
             }

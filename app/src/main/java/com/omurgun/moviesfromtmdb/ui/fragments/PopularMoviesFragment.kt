@@ -76,7 +76,7 @@ class PopularMoviesFragment @Inject constructor(
 
                     println("Success")
                     println("data : ${it.data}")
-                    Toast.makeText(requireContext(),"movies get from API",Toast.LENGTH_SHORT).show()
+
                     popularMovieAdapter.popularMovies = it.data?.popularMovies!!
                     savePopularMoviesFromRoom(it.data.popularMovies)
                     binding.popularMoviesLoading.makeGone()
@@ -102,7 +102,7 @@ class PopularMoviesFragment @Inject constructor(
                 }
                 is ResultData.Success -> {
                     println("Success")
-                    Toast.makeText(requireContext(),"movies added to room",Toast.LENGTH_SHORT).show()
+
                     println("data : ${it.data}")
 
                 }
@@ -127,7 +127,7 @@ class PopularMoviesFragment @Inject constructor(
                 is ResultData.Success -> {
                     println("Success")
                     println("data : ${it.data}")
-                    Toast.makeText(requireContext(),"movies get from room",Toast.LENGTH_SHORT).show()
+
                     popularMovieAdapter.popularMovies = it.data!!
                     binding.popularMoviesLoading.makeGone()
                     binding.popularMoviesContainer.makeVisible()

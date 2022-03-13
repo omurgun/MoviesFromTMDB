@@ -71,7 +71,6 @@ class FavoriteMoviesFragment @Inject constructor(
                     println("Success")
                     println("data : ${it.data}")
                     favoriteMovieAdapter.favoriteMovies = it.data!!
-                    Toast.makeText(requireContext(),"get favorites movies from room", Toast.LENGTH_SHORT).show()
                     binding.favoriteMoviesLoading.makeGone()
                     binding.favoriteMoviesContainer.makeVisible()
 
