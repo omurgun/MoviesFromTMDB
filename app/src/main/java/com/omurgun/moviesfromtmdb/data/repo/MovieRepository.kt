@@ -1,18 +1,14 @@
 package com.omurgun.moviesfromtmdb.data.repo
 
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_MOVIE_IMAGES
-import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_SIMILAR_MOVIE
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.GET_MOVIE
-import com.omurgun.moviesfromtmdb.data.local.room.FavoriteMovieDao
-import com.omurgun.moviesfromtmdb.data.local.room.MovieDao
+import com.omurgun.moviesfromtmdb.data.local.room.dao.MovieDao
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovie
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovie
 import com.omurgun.moviesfromtmdb.data.remote.TMDBService
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
 import javax.inject.Inject
@@ -58,9 +54,7 @@ class MovieRepository @Inject constructor(
         return tmdbService.getPopularMovies(currentPageCount = requestGetPopularMovies.currentPageCount)
     }
 
-    override suspend fun getMovieImagesByMovieIdFromAPI(requestGetMovieImages: RequestGetMovieImages): ResponseMovieImages {
-        return tmdbService.getMovieImages("$GET_MOVIE/${requestGetMovieImages.movieId}/${CONSTANTS_MOVIE_IMAGES}")
-    }
+
 
 
 

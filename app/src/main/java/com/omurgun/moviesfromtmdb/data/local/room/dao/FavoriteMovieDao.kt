@@ -1,4 +1,4 @@
-package com.omurgun.moviesfromtmdb.data.local.room
+package com.omurgun.moviesfromtmdb.data.local.room.dao
 
 import androidx.room.*
 import com.omurgun.moviesfromtmdb.data.models.entity.EntityFavoriteMovie

@@ -19,5 +19,4 @@ interface IMovieRepository {
     suspend fun deleteAllMoviesFromRoom()
     suspend fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail) : ResponseMovie
     suspend fun getPopularMoviesFromAPI(requestGetPopularMovies: RequestGetPopularMovies) : ResponsePopularMovie
-    suspend fun getMovieImagesByMovieIdFromAPI(requestGetMovieImages : RequestGetMovieImages) : ResponseMovieImages
 }

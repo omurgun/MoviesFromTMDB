@@ -10,6 +10,7 @@ import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovie
 import com.omurgun.moviesfromtmdb.domain.useCases.FavoriteMovieUseCase
+import com.omurgun.moviesfromtmdb.domain.useCases.MovieImageUseCase
 import com.omurgun.moviesfromtmdb.domain.useCases.MovieUseCase
 import com.omurgun.moviesfromtmdb.domain.useCases.SimilarMovieUseCase
 import com.omurgun.moviesfromtmdb.util.ResultData
@@ -22,14 +23,19 @@ import java.io.IOError
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieDetailViewModel @Inject constructor(private val movieUseCase: MovieUseCase,private val similarMovieUseCase: SimilarMovieUseCase,private val favoriteMovieUseCase: FavoriteMovieUseCase) : ViewModel() {
+class MovieDetailViewModel @Inject constructor
+    (private val movieUseCase: MovieUseCase,
+     private val similarMovieUseCase: SimilarMovieUseCase,
+     private val favoriteMovieUseCase: FavoriteMovieUseCase,
+     private val movieImageUseCase: MovieImageUseCase
+) : ViewModel() {
 
     fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> {
         return movieUseCase.getMovieDetailFromAPI(requestMovieDetail).asLiveData(Dispatchers.IO)
     }
 
     fun getMovieImagesByMovieIdFromAPI(requestGetMovieImages : RequestGetMovieImages) : LiveData<ResultData<ResponseMovieImages>> {
-        return movieUseCase.getMovieImagesByMovieIdFromAPI(requestGetMovieImages).asLiveData(Dispatchers.IO)
+        return movieImageUseCase.getMovieImagesByMovieIdFromAPI(requestGetMovieImages).asLiveData(Dispatchers.IO)
     }
 
     fun getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies : RequestGetSimilarMovies) : LiveData<ResultData<ResponseSimilarMovie>> {

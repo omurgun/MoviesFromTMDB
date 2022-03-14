@@ -1,4 +1,4 @@
-package com.omurgun.moviesfromtmdb.data.local.room
+package com.omurgun.moviesfromtmdb.data.local.room.dao
 
 import androidx.room.*
 import com.omurgun.moviesfromtmdb.data.models.entity.EntitySimilarMovie
@@ -15,17 +15,9 @@ interface SimilarMovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllSimilarMovies(vararg similarMovies: EntitySimilarMovie) : List<Long>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSimilarMovie(similarMovies : EntitySimilarMovie) : Long
-
-    @Update
-    suspend fun updateSimilarMovie(similarMovies: EntitySimilarMovie)
-
     @Query("DELETE FROM similarMovies WHERE movieId = :movieId")
     suspend fun deleteAllSimilarMovies(movieId : Int) : Int
 
-    @Delete
-    suspend fun deleteSimilarMovie(similarMovies: EntitySimilarMovie) : Int
 
 
 }

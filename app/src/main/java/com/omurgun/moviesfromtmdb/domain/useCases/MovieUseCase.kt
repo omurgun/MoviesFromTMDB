@@ -45,17 +45,6 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
         }
     }
 
-    fun getMovieImagesByMovieIdFromAPI(requestGetMovieImages : RequestGetMovieImages) : Flow<ResultData<ResponseMovieImages>> = flow {
-        try {
-            emit(ResultData.Loading())
-            val movieImages = movieRepository.getMovieImagesByMovieIdFromAPI(requestGetMovieImages)
-            emit(ResultData.Success(movieImages))
-        } catch (e: HttpException) {
-            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
-        } catch (e: IOError) {
-            emit(ResultData.Exception(message = "Could not reach internet"))
-        }
-    }
 
     fun getMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie?>> = flow {
         try {

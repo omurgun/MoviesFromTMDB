@@ -2,7 +2,7 @@ package com.omurgun.moviesfromtmdb.di
 
 import android.content.Context
 import androidx.room.Room
-import com.omurgun.moviesfromtmdb.data.local.room.MovieDatabase
+import com.omurgun.moviesfromtmdb.data.local.room.db.MovieDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,4 +37,26 @@ object RoomModule {
     fun injectSimilarMovieDao(
         database: MovieDatabase
     ) = database.SimilarMovieDao()
+
+
+    @Singleton
+    @Provides
+    fun injectMovieBackdropDao(
+        database: MovieDatabase
+    ) = database.MovieBackdropDao()
+
+    @Singleton
+    @Provides
+    fun injectMoviePosterDao(
+        database: MovieDatabase
+    ) = database.MoviePosterDao()
+
+
+    @Singleton
+    @Provides
+    fun injectMovieLogoDao(
+        database: MovieDatabase
+    ) = database.MovieLogoDao()
+
+
 }

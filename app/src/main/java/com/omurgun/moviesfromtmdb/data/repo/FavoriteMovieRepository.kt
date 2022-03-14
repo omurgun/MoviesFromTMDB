@@ -1,7 +1,7 @@
 package com.omurgun.moviesfromtmdb.data.repo
 
 
-import com.omurgun.moviesfromtmdb.data.local.room.FavoriteMovieDao
+import com.omurgun.moviesfromtmdb.data.local.room.dao.FavoriteMovieDao
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IFavoriteMovieRepository
 

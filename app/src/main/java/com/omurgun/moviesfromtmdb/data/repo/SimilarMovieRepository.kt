@@ -1,7 +1,7 @@
 package com.omurgun.moviesfromtmdb.data.repo
 
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants
-import com.omurgun.moviesfromtmdb.data.local.room.SimilarMovieDao
+import com.omurgun.moviesfromtmdb.data.local.room.dao.SimilarMovieDao
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovie
