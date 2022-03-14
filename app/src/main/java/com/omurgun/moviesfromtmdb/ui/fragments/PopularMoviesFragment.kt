@@ -128,7 +128,16 @@ class PopularMoviesFragment @Inject constructor(
                     println("Success")
                     println("data : ${it.data}")
 
-                    popularMovieAdapter.popularMovies = it.data!!
+                    if (it.data!!.isNotEmpty())
+                    {
+                        popularMovieAdapter.popularMovies = it.data
+                    }
+                    else
+                    {
+                        getPopularMoviesFromAPI(RequestGetPopularMovies(1))
+                    }
+
+
                     binding.popularMoviesLoading.makeGone()
                     binding.popularMoviesContainer.makeVisible()
 

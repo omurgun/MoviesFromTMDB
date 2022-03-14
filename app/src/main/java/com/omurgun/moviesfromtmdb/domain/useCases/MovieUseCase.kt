@@ -8,8 +8,8 @@ import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
-import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovies
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovies
+import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovie
+import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovie
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
 import com.omurgun.moviesfromtmdb.util.ResultData
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +33,7 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
         }
     }
 
-    fun getPopularMoviesFromAPI(requestGetPopularMovies: RequestGetPopularMovies) : Flow<ResultData<ResponsePopularMovies>> = flow {
+    fun getPopularMoviesFromAPI(requestGetPopularMovies: RequestGetPopularMovies) : Flow<ResultData<ResponsePopularMovie>> = flow {
         try {
             emit(ResultData.Loading())
             val movies = movieRepository.getPopularMoviesFromAPI(requestGetPopularMovies)
@@ -57,21 +57,7 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
         }
     }
 
-
-    fun getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies : RequestGetSimilarMovies) : Flow<ResultData<ResponseSimilarMovies>> = flow {
-        try {
-            emit(ResultData.Loading())
-            val similarMovies = movieRepository.getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies)
-            emit(ResultData.Success(similarMovies))
-        } catch (e: HttpException) {
-            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
-        } catch (e: IOError) {
-            emit(ResultData.Exception(message = "Could not reach internet"))
-        }
-    }
-
-
-    fun getMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> = flow {
+    fun getMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie?>> = flow {
         try {
             emit(ResultData.Loading())
             val movie = movieRepository.getMovieFromRoom(requestMovieDetail.movieId)
@@ -108,86 +94,6 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
             emit(ResultData.Exception(message = "Could not reach internet"))
         }
     }.asLiveData(Dispatchers.IO)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    fun getFavoriteMovieFromRoom(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> = flow {
-        try {
-            emit(ResultData.Loading())
-            val movie = movieRepository.getFavoriteMovieFromRoom(requestMovieDetail.movieId)
-            emit(ResultData.Success(movie))
-        } catch (e: HttpException) {
-            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
-        } catch (e: IOError) {
-            emit(ResultData.Exception(message = "Could not reach internet"))
-        }
-    }.asLiveData(Dispatchers.IO)
-
-
-    fun insertFavoriteMovieToRoom(movie : ResponseMovie) : LiveData<ResultData<Long>> = flow {
-        try {
-            emit(ResultData.Loading())
-            val favoriteMovie = movieRepository.insertFavoriteMovieToRoom(movie)
-            emit(ResultData.Success(favoriteMovie))
-        } catch (e: HttpException) {
-            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
-        } catch (e: IOError) {
-            emit(ResultData.Exception(message = "Could not reach internet"))
-        }
-    }.asLiveData(Dispatchers.IO)
-
-
-    fun getAllFavoriteMoviesFromRoom() : LiveData<ResultData<List<ResponseMovie>>> = flow {
-        try {
-            emit(ResultData.Loading())
-            val favoriteMovies = movieRepository.getAllFavoriteMoviesFromRoom()
-            emit(ResultData.Success(favoriteMovies))
-        } catch (e: HttpException) {
-            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
-        } catch (e: IOError) {
-            emit(ResultData.Exception(message = "Could not reach internet"))
-        }
-    }.asLiveData(Dispatchers.IO)
-
-
-    fun deleteFavoriteMovieFromRoom(movie : ResponseMovie) : LiveData<ResultData<Int>> = flow {
-        try {
-            emit(ResultData.Loading())
-            val favoriteMovies = movieRepository.deleteFavoriteMovieFromRoom(movie)
-            emit(ResultData.Success(favoriteMovies))
-        } catch (e: HttpException) {
-            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
-        } catch (e: IOError) {
-            emit(ResultData.Exception(message = "Could not reach internet"))
-        }
-    }.asLiveData(Dispatchers.IO)
-
-
-
-
 
 
 }

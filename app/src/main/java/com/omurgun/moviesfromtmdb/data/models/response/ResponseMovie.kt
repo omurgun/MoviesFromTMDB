@@ -4,7 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import com.omurgun.moviesfromtmdb.data.models.internal.InternalFavoriteMovie
+import com.omurgun.moviesfromtmdb.data.models.entity.EntityFavoriteMovie
+import com.omurgun.moviesfromtmdb.data.models.entity.EntitySimilarMovie
 
 @Entity(tableName = "movies")
 data class ResponseMovie(
@@ -30,9 +31,21 @@ data class ResponseMovie(
 
     ) {
 
-    fun toInternalFavoriteMovie() : InternalFavoriteMovie{
-        return InternalFavoriteMovie(
+    fun toEntityFavoriteMovie() : EntityFavoriteMovie {
+        return EntityFavoriteMovie(
             this.id,
+            this.title,
+            this.description,
+            this.releaseDate,
+            this.averageVote,
+            this.posterPath
+        )
+    }
+
+    fun toEntitySimilarMovie(movieId : Int) : EntitySimilarMovie {
+        return EntitySimilarMovie(
+            this.id,
+            movieId,
             this.title,
             this.description,
             this.releaseDate,

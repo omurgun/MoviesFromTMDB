@@ -1,4 +1,4 @@
-package com.omurgun.moviesfromtmdb.data.models.internal
+package com.omurgun.moviesfromtmdb.data.models.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 
 @Entity(tableName = "favoriteMovies")
-data class InternalFavoriteMovie(
+data class EntityFavoriteMovie(
     @PrimaryKey
     @ColumnInfo(name = "id")
     var id : Int,

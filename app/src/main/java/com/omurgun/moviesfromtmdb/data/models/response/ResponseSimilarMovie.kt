@@ -2,7 +2,7 @@ package com.omurgun.moviesfromtmdb.data.models.response
 
 import com.google.gson.annotations.SerializedName
 
-data class ResponseSimilarMovies(
+data class ResponseSimilarMovie(
     @SerializedName("page")
     val currentPage : Int,
     @SerializedName("total_pages")

@@ -28,7 +28,13 @@ object RoomModule {
 
     @Singleton
     @Provides
+    fun injectFavoriteMovieDao(
+        database: MovieDatabase
+    ) = database.favoriteMovieDao()
+
+    @Singleton
+    @Provides
     fun injectSimilarMovieDao(
         database: MovieDatabase
-    ) = database.similarMovieDao()
+    ) = database.SimilarMovieDao()
 }

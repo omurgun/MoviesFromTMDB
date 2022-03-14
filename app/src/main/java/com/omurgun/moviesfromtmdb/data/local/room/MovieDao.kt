@@ -10,7 +10,7 @@ interface MovieDao {
     fun getAllMovies() : List<ResponseMovie>
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    fun getMovie(id : Int) : ResponseMovie
+    fun getMovie(id : Int) : ResponseMovie?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllMovies(vararg movies: ResponseMovie) : List<Long>

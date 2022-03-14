@@ -1,10 +1,15 @@
 package com.omurgun.moviesfromtmdb.di
 
+import com.omurgun.moviesfromtmdb.data.local.room.FavoriteMovieDao
 import com.omurgun.moviesfromtmdb.data.local.room.MovieDao
 import com.omurgun.moviesfromtmdb.data.local.room.SimilarMovieDao
 import com.omurgun.moviesfromtmdb.data.remote.TMDBService
+import com.omurgun.moviesfromtmdb.data.repo.FavoriteMovieRepository
 import com.omurgun.moviesfromtmdb.data.repo.MovieRepository
+import com.omurgun.moviesfromtmdb.data.repo.SimilarMovieRepository
+import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IFavoriteMovieRepository
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
+import com.omurgun.moviesfromtmdb.domain.repoInterfaces.ISimilarMovieRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,5 +22,15 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideMovieRepo(api: TMDBService,movieDao : MovieDao,similarMovieDao: SimilarMovieDao) = MovieRepository(api,movieDao,similarMovieDao) as IMovieRepository
+    fun provideMovieRepo(api: TMDBService,movieDao : MovieDao) = MovieRepository(api,movieDao) as IMovieRepository
+
+
+    @Singleton
+    @Provides
+    fun provideFavoriteMovieRepo(favoriteMovieDao: FavoriteMovieDao) = FavoriteMovieRepository(favoriteMovieDao) as IFavoriteMovieRepository
+
+
+    @Singleton
+    @Provides
+    fun provideSimilarMovieRepo(api: TMDBService,similarMovieDao: SimilarMovieDao) = SimilarMovieRepository(api,similarMovieDao) as ISimilarMovieRepository
 }

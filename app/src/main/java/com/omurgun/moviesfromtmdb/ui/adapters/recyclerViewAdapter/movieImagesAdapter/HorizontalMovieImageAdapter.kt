@@ -3,12 +3,15 @@ package com.omurgun.moviesfromtmdb.ui.adapters.recyclerViewAdapter.movieImagesAd
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.omurgun.moviesfromtmdb.R
 import com.omurgun.moviesfromtmdb.data.models.internal.InternalHorizontalMovieImageItem
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImage
 import com.omurgun.moviesfromtmdb.databinding.*
+import com.omurgun.moviesfromtmdb.ui.fragments.MovieDetailFragmentDirections
+import retrofit2.Response
 
 class HorizontalMovieImageAdapter() : RecyclerView.Adapter<HorizontalMovieViewHolder>()
 {
@@ -20,6 +23,7 @@ class HorizontalMovieImageAdapter() : RecyclerView.Adapter<HorizontalMovieViewHo
         }
 
     var movieImages = listOf<ResponseMovieImage>()
+    var similarMovies = listOf<ResponseMovie>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorizontalMovieViewHolder {
@@ -74,8 +78,14 @@ class HorizontalMovieImageAdapter() : RecyclerView.Adapter<HorizontalMovieViewHo
         }
 
         holder.itemView.setOnClickListener {
-//            val action = PopularMoviesFragmentDirections.actionPopularMoviesFragmentToMovieDetailFragment(popularMovies[position].id)
-//            Navigation.findNavController(it).navigate(action)
+            println("similarMoviesSize : ${similarMovies.size}")
+            println("movieImagesSize : ${movieImages.size}")
+            if (similarMovies.isNotEmpty())
+            {
+                val action = MovieDetailFragmentDirections.actionMovieDetailFragmentSelf(similarMovies[position].id)
+                Navigation.findNavController(it).navigate(action)
+            }
+
         }
 
     }

@@ -1,33 +1,31 @@
 package com.omurgun.moviesfromtmdb.data.local.room
 
 import androidx.room.*
-import com.omurgun.moviesfromtmdb.data.models.internal.InternalFavoriteMovie
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
+import com.omurgun.moviesfromtmdb.data.models.entity.EntitySimilarMovie
 
 @Dao
 interface SimilarMovieDao {
 
-    @Query("SELECT * FROM favoriteMovies")
-    fun getAllFavoriteMovies() : List<InternalFavoriteMovie>
+    @Query("SELECT * FROM similarMovies WHERE movieId = :movieId")
+    fun getAllSimilarMovies(movieId : Int) : List<EntitySimilarMovie>
 
-    @Query("SELECT * FROM favoriteMovies WHERE id = :id")
-    fun getFavoriteMovie(id : Int) : InternalFavoriteMovie?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllFavoriteMovies(vararg favoriteMovies: InternalFavoriteMovie) : List<Long>
+    @Query("SELECT * FROM similarMovies WHERE id = :id")
+    fun getSimilarMovie(id : Int) : EntitySimilarMovie?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavoriteMovie(favoriteMovies : InternalFavoriteMovie) : Long
+    suspend fun insertAllSimilarMovies(vararg similarMovies: EntitySimilarMovie) : List<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSimilarMovie(similarMovies : EntitySimilarMovie) : Long
 
     @Update
-    suspend fun updateFavoriteMovie(favoriteMovies: InternalFavoriteMovie)
+    suspend fun updateSimilarMovie(similarMovies: EntitySimilarMovie)
 
-    @Query("DELETE FROM favoriteMovies")
-    suspend fun deleteAllFavoriteMovies()
+    @Query("DELETE FROM similarMovies WHERE movieId = :movieId")
+    suspend fun deleteAllSimilarMovies(movieId : Int) : Int
 
     @Delete
-    suspend fun deleteFavoriteMovie(favoriteMovies: InternalFavoriteMovie) : Int
-
+    suspend fun deleteSimilarMovie(similarMovies: EntitySimilarMovie) : Int
 
 
 }

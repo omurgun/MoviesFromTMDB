@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.omurgun.moviesfromtmdb.R
@@ -25,6 +27,7 @@ import com.omurgun.moviesfromtmdb.ui.adapters.recyclerViewAdapter.movieImagesAda
 import com.omurgun.moviesfromtmdb.ui.viewModelFactory.ViewModelFactory
 import com.omurgun.moviesfromtmdb.ui.viewModels.MovieDetailViewModel
 import com.omurgun.moviesfromtmdb.util.*
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 
@@ -56,6 +59,7 @@ class MovieDetailFragment @Inject constructor(
         initViews()
         getMovieFromRoom(RequestGetMovieDetail(movieId!!))
         getFavoriteMovieFromRoom(RequestGetMovieDetail(movieId!!))
+        getAllSimilarMoviesFromRoom(movieId!!)
         //getMovieDetailFromAPI(RequestGetMovieDetail(movieId!!))
         //getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
         //getMovieImagesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
@@ -77,7 +81,7 @@ class MovieDetailFragment @Inject constructor(
             verticalItems.clear()
             getMovieDetailFromAPI(RequestGetMovieDetail(movieId!!))
             getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
-            getMovieImagesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
+            getSimilarMoviesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
         }
 
         binding.favoriteImage.setOnClickListener {
@@ -201,8 +205,8 @@ class MovieDetailFragment @Inject constructor(
 
     }
 
-    private fun getMovieImagesByMovieIdFromAPI(requestGetSimilarMovies : RequestGetSimilarMovies){
-        val data = movieDetailViewModel.getMovieImagesByMovieIdFromAPI(requestGetSimilarMovies)
+    private fun getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies : RequestGetSimilarMovies){
+        val data = movieDetailViewModel.getSimilarMoviesByMovieIdFromAPI(requestGetSimilarMovies)
 
         data.observe(viewLifecycleOwner) {
             when (it) {
@@ -217,15 +221,17 @@ class MovieDetailFragment @Inject constructor(
 
                     if (it.data?.similarMovies!!.isNotEmpty())
                     {
+                        deleteAllSimilarMoviesFromRoom(movieId!!)
                         verticalItems.add(
                             InternalVerticalMovieItem(
                                 InternalTitleItem(4,"Similars"),
                                 it.data.similarMovies.map { data -> InternalHorizontalMovieImageItem.MovieImageSmall(
                                     ResponseMovieImage(0,0,data.posterPath)
                                 ) },
-                                null
+                                null,it.data.similarMovies
                             )
                         )
+                        insertAllSimilarMoviesToRoom(it.data.similarMovies,movieId!!)
                     }
 
 
@@ -289,8 +295,16 @@ class MovieDetailFragment @Inject constructor(
                 is ResultData.Success -> {
                     println("Success")
                     println("getMovieFromRoom : ${it.data}")
-                    currentMovie = it.data!!
-                    updateUI(it.data)
+                    if (it.data != null)
+                    {
+                        currentMovie = it.data
+                        updateUI(it.data)
+                    }
+                    else
+                    {
+                        getSimilarMovieFromRoom(movieId!!)
+                    }
+
                     binding.movieDetailLoading.makeGone()
                     binding.movieDetailContainer.makeVisible()
 
@@ -371,6 +385,150 @@ class MovieDetailFragment @Inject constructor(
         }
 
     }
+
+    private fun getAllSimilarMoviesFromRoom(movieId: Int){
+        val data = movieDetailViewModel.getAllSimilarMoviesFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("getAllSimilarMoviesFromRoom : ${it.data}")
+                    if (it.data != null && it.data.isNotEmpty())
+                    {
+                        verticalItems.add(
+                            InternalVerticalMovieItem(
+                                InternalTitleItem(4,"Similars"),
+                                it.data.map { data -> InternalHorizontalMovieImageItem.MovieImageSmall(
+                                    ResponseMovieImage(0,0,data.posterPath)
+                                ) },
+                                null
+                            )
+                        )
+                        verticalMovieImageAdapter.verticalItems = verticalItems
+                    }
+                    else
+                    {
+                        getSimilarMoviesByMovieIdFromAPI(RequestGetSimilarMovies(movieId,1))
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun getSimilarMovieFromRoom(movieId: Int){
+        val data = movieDetailViewModel.getSimilarMovieFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("deleteFavoriteMovieFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+                        currentMovie = it.data
+                        updateUI(it.data)
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun insertAllSimilarMoviesToRoom(similarMovies: List<ResponseMovie>, movieId: Int){
+        val data = movieDetailViewModel.insertAllSimilarMoviesToRoom(similarMovies,movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("deleteFavoriteMovieFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun deleteAllSimilarMoviesFromRoom(movieId: Int){
+        val data = movieDetailViewModel.deleteAllSimilarMoviesFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("deleteFavoriteMovieFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+
 
     private fun updateUI(responseMovie : ResponseMovie){
         binding.movieImage.downloadFromUrl(IMAGES_BASE_URL + responseMovie.posterPath,null)
