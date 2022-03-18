@@ -31,7 +31,8 @@ class MovieImageRepository  @Inject constructor(
         images: List<ResponseMovieImage>,
         movieId: Int
     ): List<Long> {
-        return movieBackdropDao.insertAllBackdrops(*images.map { it.toEntityMovieImageBackdrop(1,movieId) }.toTypedArray())
+        return movieBackdropDao.insertAllBackdrops(*images.mapIndexed { index, responseMovieImage ->
+            responseMovieImage.toEntityMovieImageBackdrop(index,movieId) }.toTypedArray())
     }
 
     override suspend fun deleteAllBackdropsFromRoom(movieId: Int): Int {
@@ -46,7 +47,8 @@ class MovieImageRepository  @Inject constructor(
         images: List<ResponseMovieImage>,
         movieId: Int
     ): List<Long> {
-        return movieLogoDao.insertAllLogos(*images.map { it.toEntityMovieImageLogo(1,movieId) }.toTypedArray())
+        return movieLogoDao.insertAllLogos(*images.mapIndexed { index, responseMovieImage ->
+            responseMovieImage.toEntityMovieImageLogo(index,movieId) }.toTypedArray())
     }
 
     override suspend fun deleteAllLogosFromRoom(movieId: Int): Int {
@@ -60,8 +62,9 @@ class MovieImageRepository  @Inject constructor(
     override suspend fun insertAllPostersToRoom(
         images: List<ResponseMovieImage>,
         movieId: Int
-    ): List<Long> {
-        return moviePosterDao.insertAllPosters(*images.map { it.toEntityMovieImagePoster(1,movieId) }.toTypedArray())
+    ): List<Long>  {
+        return moviePosterDao.insertAllPosters(*images.mapIndexed { index, responseMovieImage ->
+            responseMovieImage.toEntityMovieImagePoster(index,movieId) }.toTypedArray())
     }
 
     override suspend fun deleteAllPostersFromRoom(movieId: Int): Int {

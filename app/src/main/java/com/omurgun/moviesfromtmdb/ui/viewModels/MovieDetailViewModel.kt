@@ -1,12 +1,14 @@
 package com.omurgun.moviesfromtmdb.ui.viewModels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
+import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImage
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovie
 import com.omurgun.moviesfromtmdb.domain.useCases.FavoriteMovieUseCase
@@ -29,6 +31,8 @@ class MovieDetailViewModel @Inject constructor
      private val favoriteMovieUseCase: FavoriteMovieUseCase,
      private val movieImageUseCase: MovieImageUseCase
 ) : ViewModel() {
+
+    var isRefreshImages = MutableLiveData<Boolean>()
 
     fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail) : LiveData<ResultData<ResponseMovie>> {
         return movieUseCase.getMovieDetailFromAPI(requestMovieDetail).asLiveData(Dispatchers.IO)
@@ -73,6 +77,45 @@ class MovieDetailViewModel @Inject constructor
     fun deleteAllSimilarMoviesFromRoom(movieId: Int) : LiveData<ResultData<Int>> {
         return similarMovieUseCase.deleteAllSimilarMoviesFromRoom(movieId).asLiveData(Dispatchers.IO)
     }
+
+    fun getAllBackdropsFromRoom(movieId: Int) : LiveData<ResultData<List<ResponseMovieImage>>> {
+        return movieImageUseCase.getAllBackdropsFromRoom(movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun insertAllBackdropsToRoom(images: List<ResponseMovieImage>, movieId: Int) : LiveData<ResultData<List<Long>>> {
+        return movieImageUseCase.insertAllBackdropsToRoom(images,movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun deleteAllBackdropsFromRoom(movieId: Int) : LiveData<ResultData<Int>> {
+        return movieImageUseCase.deleteAllBackdropsFromRoom(movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun getAllLogosFromRoom(movieId: Int) : LiveData<ResultData<List<ResponseMovieImage>>> {
+        return movieImageUseCase.getAllLogosFromRoom(movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun insertAllLogosToRoom(images: List<ResponseMovieImage>, movieId: Int) : LiveData<ResultData<List<Long>>> {
+        return movieImageUseCase.insertAllLogosToRoom(images,movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun deleteAllLogosFromRoom(movieId: Int) : LiveData<ResultData<Int>> {
+        return movieImageUseCase.deleteAllLogosFromRoom(movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun getAllPostersFromRoom(movieId: Int) : LiveData<ResultData<List<ResponseMovieImage>>> {
+        return movieImageUseCase.getAllPostersFromRoom(movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun insertAllPostersToRoom(images: List<ResponseMovieImage>, movieId: Int) : LiveData<ResultData<List<Long>>> {
+        return movieImageUseCase.insertAllPostersToRoom(images,movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun deleteAllPostersFromRoom(movieId: Int) : LiveData<ResultData<Int>> {
+        return movieImageUseCase.deleteAllPostersFromRoom(movieId).asLiveData(Dispatchers.IO)
+    }
+
+
+
 
 
 }

@@ -42,7 +42,7 @@ class MovieDetailFragment @Inject constructor(
     private var verticalItems = arrayListOf<InternalVerticalMovieItem>()
     private lateinit var currentMovie : ResponseMovie
     private var currentMovieIsFavorite : Boolean = false
-
+    private var countOfRefreshImages : Int = 0
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,6 +60,9 @@ class MovieDetailFragment @Inject constructor(
         getMovieFromRoom(RequestGetMovieDetail(movieId!!))
         getFavoriteMovieFromRoom(RequestGetMovieDetail(movieId!!))
         getAllSimilarMoviesFromRoom(movieId!!)
+        getAllBackdropsFromRoom(movieId!!)
+        getAllLogosFromRoom(movieId!!)
+        getAllPostersFromRoom(movieId!!)
         //getMovieDetailFromAPI(RequestGetMovieDetail(movieId!!))
         //getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
         //getMovieImagesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
@@ -96,8 +99,26 @@ class MovieDetailFragment @Inject constructor(
             }
 
         }
+
+        observeLiveData()
     }
 
+    private fun observeLiveData(){
+        movieDetailViewModel.isRefreshImages.observe(viewLifecycleOwner) { result ->
+            result?.let {
+                if (it) {
+                    if (countOfRefreshImages == 1)
+                    {
+                        getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
+                        movieDetailViewModel.isRefreshImages.value = false
+                    }
+
+                }
+
+            }
+        }
+
+    }
 
     private fun getMovieDetailFromAPI(requestMovieDetail: RequestGetMovieDetail){
         val data = movieDetailViewModel.getMovieDetailFromAPI(requestMovieDetail)
@@ -148,6 +169,7 @@ class MovieDetailFragment @Inject constructor(
 
                     if (it.data?.backdrops!!.isNotEmpty())
                     {
+                        deleteAllBackdropsFromRoom(movieId!!)
                         verticalItems.add(
                             InternalVerticalMovieItem(
                                 InternalTitleItem(1,"Backdrops"),
@@ -157,10 +179,12 @@ class MovieDetailFragment @Inject constructor(
                                 it.data.backdrops
                             )
                         )
+                        insertAllBackdropsToRoom(it.data.backdrops,movieId!!)
                     }
 
                     if (it.data.logos.isNotEmpty())
                     {
+                        deleteAllLogosFromRoom(movieId!!)
                         verticalItems.add(
                             InternalVerticalMovieItem(
                                 InternalTitleItem(2,"Logos"),
@@ -170,10 +194,12 @@ class MovieDetailFragment @Inject constructor(
                                 it.data.logos
                             )
                         )
+                        insertAllLogosToRoom(it.data.logos,movieId!!)
                     }
 
                     if (it.data.posters.isNotEmpty())
                     {
+                        deleteAllPostersFromRoom(movieId!!)
                         verticalItems.add(
                             InternalVerticalMovieItem(
                                 InternalTitleItem(3,"Posters"),
@@ -183,7 +209,10 @@ class MovieDetailFragment @Inject constructor(
                                 it.data.posters
                             )
                         )
+                        insertAllPostersToRoom(it.data.posters,movieId!!)
                     }
+
+                    countOfRefreshImages = 0
 
 
 
@@ -527,6 +556,337 @@ class MovieDetailFragment @Inject constructor(
         }
 
     }
+
+    private fun getAllBackdropsFromRoom(movieId: Int){
+        val data = movieDetailViewModel.getAllBackdropsFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("getAllBackdropsFromRoom : ${it.data}")
+                    if (it.data != null && it.data.isNotEmpty())
+                    {
+                        verticalItems.add(
+                            InternalVerticalMovieItem(
+                                InternalTitleItem(1,"Backdrops"),
+                                it.data.map { data -> InternalHorizontalMovieImageItem.MovieImageSmall(
+                                    ResponseMovieImage(data.height,data.width,data.path)
+                                ) },
+                                it.data
+                        ))
+                        verticalMovieImageAdapter.verticalItems = verticalItems
+                    }
+                    else
+                    {
+                        countOfRefreshImages++
+                        movieDetailViewModel.isRefreshImages.value = true
+                        //getSimilarMoviesByMovieIdFromAPI(RequestGetSimilarMovies(movieId,1))
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun insertAllBackdropsToRoom(backdrops: List<ResponseMovieImage>, movieId: Int){
+        val data = movieDetailViewModel.insertAllBackdropsToRoom(backdrops,movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("insertAllBackdropsToRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun deleteAllBackdropsFromRoom(movieId: Int){
+        val data = movieDetailViewModel.deleteAllBackdropsFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("deleteAllBackdropsFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun getAllLogosFromRoom(movieId: Int){
+        val data = movieDetailViewModel.getAllLogosFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("getAllBackdropsFromRoom : ${it.data}")
+                    if (it.data != null && it.data.isNotEmpty())
+                    {
+                        verticalItems.add(
+                            InternalVerticalMovieItem(
+                                InternalTitleItem(2,"Logos"),
+                                it.data.map { data -> InternalHorizontalMovieImageItem.MovieImageSmall(
+                                    ResponseMovieImage(data.height,data.width,data.path)
+                                ) },
+                                it.data
+                            ))
+                        verticalMovieImageAdapter.verticalItems = verticalItems
+                    }
+                    else
+                    {
+                        countOfRefreshImages++
+                        movieDetailViewModel.isRefreshImages.value = true
+                        //getSimilarMoviesByMovieIdFromAPI(RequestGetSimilarMovies(movieId,1))
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun insertAllLogosToRoom(logos: List<ResponseMovieImage>, movieId: Int){
+        val data = movieDetailViewModel.insertAllLogosToRoom(logos,movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("insertAllLogosToRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun deleteAllLogosFromRoom(movieId: Int){
+        val data = movieDetailViewModel.deleteAllLogosFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("deleteAllBackdropsFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun getAllPostersFromRoom(movieId: Int){
+        val data = movieDetailViewModel.getAllPostersFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("getAllBackdropsFromRoom : ${it.data}")
+                    if (it.data != null && it.data.isNotEmpty())
+                    {
+                        verticalItems.add(
+                            InternalVerticalMovieItem(
+                                InternalTitleItem(3,"Posters"),
+                                it.data.map { data -> InternalHorizontalMovieImageItem.MovieImageSmall(
+                                    ResponseMovieImage(data.height,data.width,data.path)
+                                ) },
+                                it.data
+                            ))
+                        verticalMovieImageAdapter.verticalItems = verticalItems
+                    }
+                    else
+                    {
+                        countOfRefreshImages++
+                        movieDetailViewModel.isRefreshImages.value = true
+                        //getSimilarMoviesByMovieIdFromAPI(RequestGetSimilarMovies(movieId,1))
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun insertAllPostersToRoom(posters: List<ResponseMovieImage>, movieId: Int){
+        val data = movieDetailViewModel.insertAllPostersToRoom(posters,movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("insertAllPostersToRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun deleteAllPostersFromRoom(movieId: Int){
+        val data = movieDetailViewModel.deleteAllPostersFromRoom(movieId)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("deleteAllBackdropsFromRoom : ${it.data}")
+                    if (it.data != null)
+                    {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
 
 
 
