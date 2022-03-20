@@ -6,15 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieVideos
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImage
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseSimilarMovie
-import com.omurgun.moviesfromtmdb.domain.useCases.FavoriteMovieUseCase
-import com.omurgun.moviesfromtmdb.domain.useCases.MovieImageUseCase
-import com.omurgun.moviesfromtmdb.domain.useCases.MovieUseCase
-import com.omurgun.moviesfromtmdb.domain.useCases.SimilarMovieUseCase
+import com.omurgun.moviesfromtmdb.data.models.response.*
+import com.omurgun.moviesfromtmdb.domain.useCases.*
 import com.omurgun.moviesfromtmdb.util.ResultData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,11 +20,12 @@ import java.io.IOError
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieDetailViewModel @Inject constructor
-    (private val movieUseCase: MovieUseCase,
-     private val similarMovieUseCase: SimilarMovieUseCase,
-     private val favoriteMovieUseCase: FavoriteMovieUseCase,
-     private val movieImageUseCase: MovieImageUseCase
+class MovieDetailViewModel @Inject constructor(
+    private val movieUseCase: MovieUseCase,
+    private val similarMovieUseCase: SimilarMovieUseCase,
+    private val favoriteMovieUseCase: FavoriteMovieUseCase,
+    private val movieImageUseCase: MovieImageUseCase,
+    private val movieVideoUseCase: MovieVideoUseCase,
 ) : ViewModel() {
 
     var isRefreshImages = MutableLiveData<Boolean>()
@@ -112,6 +108,10 @@ class MovieDetailViewModel @Inject constructor
 
     fun deleteAllPostersFromRoom(movieId: Int) : LiveData<ResultData<Int>> {
         return movieImageUseCase.deleteAllPostersFromRoom(movieId).asLiveData(Dispatchers.IO)
+    }
+
+    fun getMovieVideosByMovieIdFromAPI(requestGetMovieVideos : RequestGetMovieVideos) : LiveData<ResultData<ResponseMovieVideo>> {
+        return movieVideoUseCase.getMovieVideosByMovieIdFromAPI(requestGetMovieVideos).asLiveData(Dispatchers.IO)
     }
 
 

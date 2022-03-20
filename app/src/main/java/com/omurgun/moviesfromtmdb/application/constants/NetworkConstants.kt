@@ -25,6 +25,7 @@ object  NetworkConstants {
     const val CONSTANTS_CURRENT_MOVIE_ID = "movie_id"
     const val CONSTANTS_GET_MOVIE_IMAGES_FROM_LOCALE_TIME = "locale_get_movie_images_from_locale"
     const val CONSTANTS_MOVIE_IMAGES = "images"
+    const val CONSTANTS_MOVIE_VIDEOS = "videos"
     const val CONSTANTS_SIMILAR_MOVIE = "similar"
 
     const val ERROR_CONNECTION = "Check your internet connection."

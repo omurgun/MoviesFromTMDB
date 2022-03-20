@@ -19,6 +19,7 @@ import com.omurgun.moviesfromtmdb.data.models.internal.InternalTitleItem
 import com.omurgun.moviesfromtmdb.data.models.internal.InternalVerticalMovieItem
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
+import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieVideos
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImage
@@ -63,6 +64,7 @@ class MovieDetailFragment @Inject constructor(
         getAllBackdropsFromRoom(movieId!!)
         getAllLogosFromRoom(movieId!!)
         getAllPostersFromRoom(movieId!!)
+        getMovieVideosByMovieIdFromAPI(RequestGetMovieVideos(movieId!!))
         //getMovieDetailFromAPI(RequestGetMovieDetail(movieId!!))
         //getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
         //getMovieImagesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
@@ -870,6 +872,44 @@ class MovieDetailFragment @Inject constructor(
                     println("deleteAllBackdropsFromRoom : ${it.data}")
                     if (it.data != null)
                     {
+
+                    }
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+                is ResultData.Exception -> {
+                    println("Exception")
+                    binding.movieDetailLoading.makeGone()
+                    binding.movieDetailContainer.makeVisible()
+
+                }
+            }
+        }
+
+    }
+
+    private fun getMovieVideosByMovieIdFromAPI(requestGetMovieVideos : RequestGetMovieVideos){
+        val data = movieDetailViewModel.getMovieVideosByMovieIdFromAPI(requestGetMovieVideos)
+
+        data.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResultData.Loading -> {
+                    println("loading")
+                    binding.movieDetailContainer.makeInVisible()
+                    binding.movieDetailLoading.makeVisible()
+                }
+                is ResultData.Success -> {
+                    println("Success")
+                    println("getMovieVideosByMovieIdFromAPI : ${it.data}")
+                    if (it.data != null)
+                    {
+                        it.data.results.forEach { video ->
+                            println("name : ${video.name}")
+                            println("key : ${video.key}")
+                            println("site : ${video.site}")
+                            println("type : ${video.type}")
+                        }
 
                     }
                     binding.movieDetailLoading.makeGone()
