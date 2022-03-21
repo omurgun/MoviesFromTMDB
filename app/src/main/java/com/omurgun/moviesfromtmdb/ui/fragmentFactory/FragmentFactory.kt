@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentFactory
 import com.omurgun.moviesfromtmdb.ui.fragments.FavoriteMoviesFragment
 import com.omurgun.moviesfromtmdb.ui.fragments.MovieDetailFragment
 import com.omurgun.moviesfromtmdb.ui.fragments.PopularMoviesFragment
+import com.omurgun.moviesfromtmdb.ui.fragments.SearchMovieFragment
 import com.omurgun.moviesfromtmdb.ui.viewModelFactory.ViewModelFactory
 import javax.inject.Inject
 
@@ -18,6 +19,7 @@ class FragmentFactory @Inject constructor(
         return when (className) {
             PopularMoviesFragment::class.java.name -> PopularMoviesFragment(viewModelFactory)
             MovieDetailFragment::class.java.name -> MovieDetailFragment(viewModelFactory)
+            SearchMovieFragment::class.java.name -> SearchMovieFragment(viewModelFactory)
             FavoriteMoviesFragment::class.java.name -> FavoriteMoviesFragment(viewModelFactory)
 
 

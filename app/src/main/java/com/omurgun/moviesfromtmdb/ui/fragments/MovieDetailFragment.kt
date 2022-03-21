@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.omurgun.moviesfromtmdb.R
@@ -28,13 +26,15 @@ import com.omurgun.moviesfromtmdb.ui.adapters.recyclerViewAdapter.movieImagesAda
 import com.omurgun.moviesfromtmdb.ui.viewModelFactory.ViewModelFactory
 import com.omurgun.moviesfromtmdb.ui.viewModels.MovieDetailViewModel
 import com.omurgun.moviesfromtmdb.util.*
-import kotlinx.coroutines.Dispatchers
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import javax.inject.Inject
 
 
 class MovieDetailFragment @Inject constructor(
     private val viewModelFactory: ViewModelFactory
-): Fragment() {
+): Fragment(){
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
     private val movieDetailViewModel: MovieDetailViewModel by viewModels{viewModelFactory}
@@ -58,22 +58,22 @@ class MovieDetailFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+        getMovieVideosByMovieIdFromAPI(RequestGetMovieVideos(movieId!!))
         getMovieFromRoom(RequestGetMovieDetail(movieId!!))
         getFavoriteMovieFromRoom(RequestGetMovieDetail(movieId!!))
         getAllSimilarMoviesFromRoom(movieId!!)
         getAllBackdropsFromRoom(movieId!!)
         getAllLogosFromRoom(movieId!!)
         getAllPostersFromRoom(movieId!!)
-        getMovieVideosByMovieIdFromAPI(RequestGetMovieVideos(movieId!!))
-        //getMovieDetailFromAPI(RequestGetMovieDetail(movieId!!))
-        //getMovieImagesByMovieIdFromAPI(RequestGetMovieImages(movieId!!))
-        //getMovieImagesByMovieIdFromAPI(RequestGetSimilarMovies(movieId!!,1))
 
     }
 
     private fun initViews(){
         val args by navArgs<MovieDetailFragmentArgs>()
         movieId = args.movieId
+        lifecycle.addObserver(binding.youtubePlayerView)
+
+
 
         binding.movieImagesRv.apply {
             setHasFixedSize(true)
@@ -902,14 +902,16 @@ class MovieDetailFragment @Inject constructor(
                 is ResultData.Success -> {
                     println("Success")
                     println("getMovieVideosByMovieIdFromAPI : ${it.data}")
-                    if (it.data != null)
+                    if (it.data != null && it.data.results.isNotEmpty())
                     {
                         it.data.results.forEach { video ->
-                            println("name : ${video.name}")
-                            println("key : ${video.key}")
-                            println("site : ${video.site}")
-                            println("type : ${video.type}")
+                            if (video.type == "Trailer")
+                            {
+                                setVideo(key = video.key)
+                                return@forEach
+                            }
                         }
+
 
                     }
                     binding.movieDetailLoading.makeGone()
@@ -927,6 +929,26 @@ class MovieDetailFragment @Inject constructor(
 
     }
 
+    private fun setVideo(key : String){
+        binding.youtubePlayerView.addYouTubePlayerListener(
+            object : AbstractYouTubePlayerListener() {
+                override fun onReady(youTubePlayer: YouTubePlayer) {
+                    youTubePlayer.cueVideo(key, 0f)
+                    super.onReady(youTubePlayer)
+
+                }
+
+                override fun onError(
+                    youTubePlayer: YouTubePlayer,
+                    error: PlayerConstants.PlayerError
+                ) {
+
+                    println("On Error")
+                    super.onError(youTubePlayer, error)
+                }
+            })
+    }
+
 
 
 
@@ -941,6 +963,8 @@ class MovieDetailFragment @Inject constructor(
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        //binding.youtubePlayerView.release()
+
     }
 
 }

@@ -102,13 +102,16 @@ tools:context=".ui.fragments.MovieDetailFragment">
 
                 <TextView
                     android:id="@+id/movieReleaseDate"
-                    android:layout_width="317dp"
-                    android:layout_height="22dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
                     android:textColor="@color/white"
                     android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/movieAverageVote"
+                    app:layout_constraintBottom_toBottomOf="@+id/favoriteImage"
+                    app:layout_constraintEnd_toStartOf="@+id/favoriteImage"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/movieDescription"
-                    app:layout_constraintTop_toTopOf="@+id/movieAverageVote" />
+                    app:layout_constraintTop_toTopOf="@+id/favoriteImage" />
 
 
                 <TextView
@@ -124,8 +127,14 @@ tools:context=".ui.fragments.MovieDetailFragment">
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/movieAverageVote" />
 
-
-
+                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                    android:id="@+id/youtubePlayerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintEnd_toEndOf="@+id/movieDescription"
+                    app:layout_constraintStart_toStartOf="@+id/movieDescription"
+                    app:layout_constraintTop_toBottomOf="@+id/movieDescription" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -133,13 +142,16 @@ tools:context=".ui.fragments.MovieDetailFragment">
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="25dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/container"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/movieDescription" />
+                    app:layout_constraintTop_toBottomOf="@+id/youtubePlayerView" />
+
+
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

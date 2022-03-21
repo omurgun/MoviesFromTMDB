@@ -47,9 +47,16 @@ class MainActivity : AppCompatActivity() {
 
 
                     }
+
+                    R.id.navigation_search -> {
+                        navController.navigate(R.id.searchMovieFragment)
+                        binding.bottomNavigationView.menu.getItem(1).isChecked = true
+
+                    }
+
                     R.id.navigation_favorite -> {
                         navController.navigate(R.id.favoriteMoviesFragment)
-                        binding.bottomNavigationView.menu.getItem(1).isChecked = true
+                        binding.bottomNavigationView.menu.getItem(2).isChecked = true
 
                     }
                 }
@@ -67,9 +74,14 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNavigationView.menu.getItem(0).isChecked = true
 
             }
-            "fragment_favorite_movies" -> {
+            "fragment_search_movie" -> {
                 currentBottomTab = binding.bottomNavigationView.menu.getItem(1).itemId
                 binding.bottomNavigationView.menu.getItem(1).isChecked = true
+
+            }
+            "fragment_favorite_movies" -> {
+                currentBottomTab = binding.bottomNavigationView.menu.getItem(2).itemId
+                binding.bottomNavigationView.menu.getItem(2).isChecked = true
 
             }
 

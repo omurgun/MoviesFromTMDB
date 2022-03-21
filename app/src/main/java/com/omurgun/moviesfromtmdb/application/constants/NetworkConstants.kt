@@ -15,6 +15,7 @@ object  NetworkConstants {
     //https://api.themoviedb.org/3/movie/551?api_key=0206ade6d661c1ccd273ada3ea52b93b&language=en-US // GET_MOVIE
 
     // https://api.themoviedb.org/3/movie/{movie_id}/similar?api_key=<<api_key>>&language=en-US&page=1
+    //https://api.themoviedb.org/3/search/movie?api_key=0206ade6d661c1ccd273ada3ea52b93b&language=en-US&query=marvel&page=1
 
 
 
