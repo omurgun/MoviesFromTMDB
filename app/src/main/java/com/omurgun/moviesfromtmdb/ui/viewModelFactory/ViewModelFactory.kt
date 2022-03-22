@@ -6,6 +6,7 @@ import com.omurgun.moviesfromtmdb.domain.useCases.*
 import com.omurgun.moviesfromtmdb.ui.viewModels.FavoriteMoviesViewModel
 import com.omurgun.moviesfromtmdb.ui.viewModels.MovieDetailViewModel
 import com.omurgun.moviesfromtmdb.ui.viewModels.PopularMoviesViewModel
+import com.omurgun.moviesfromtmdb.ui.viewModels.SearchMovieViewModel
 import javax.inject.Inject
 
 class ViewModelFactory @Inject constructor(
@@ -23,6 +24,7 @@ class ViewModelFactory @Inject constructor(
             PopularMoviesViewModel::class.java.name -> PopularMoviesViewModel(movieUseCase) as T
             MovieDetailViewModel::class.java.name -> MovieDetailViewModel(movieUseCase,similarMovieUseCase,favoriteMovieUseCase,movieImageUseCase,movieVideoUseCase) as T
             FavoriteMoviesViewModel::class.java.name -> FavoriteMoviesViewModel(favoriteMovieUseCase) as T
+            SearchMovieViewModel::class.java.name -> SearchMovieViewModel(movieUseCase) as T
 
             else -> throw IllegalArgumentException("ViewModel Not Found")
         }

@@ -8,6 +8,7 @@ object  NetworkConstants {
     const val SECRET_API_KEY_VALUE = "0206ade6d661c1ccd273ada3ea52b93b"
     const val GET_MOVIE = "/3/movie"
     const val GET_POPULAR_MOVIES = "/3/movie/popular"
+    const val SEARCH_MOVIE = "/3/search/movie"
 
 
     //https://api.themoviedb.org/3/movie/551/similar?api_key=0206ade6d661c1ccd273ada3ea52b93b&language=en-US&page=1 // SIMILAR_MOVIE
@@ -26,6 +27,7 @@ object  NetworkConstants {
     const val CONSTANTS_CURRENT_MOVIE_ID = "movie_id"
     const val CONSTANTS_GET_MOVIE_IMAGES_FROM_LOCALE_TIME = "locale_get_movie_images_from_locale"
     const val CONSTANTS_MOVIE_IMAGES = "images"
+    const val CONSTANTS_MOVIE_SEARCH_QUERY = "query"
     const val CONSTANTS_MOVIE_VIDEOS = "videos"
     const val CONSTANTS_SIMILAR_MOVIE = "similar"
 

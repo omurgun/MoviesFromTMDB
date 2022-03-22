@@ -1,6 +1,7 @@
 package com.omurgun.moviesfromtmdb.data.remote
 
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_API_KEY
+import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_MOVIE_SEARCH_QUERY
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_PAGE
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.GET_POPULAR_MOVIES
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.SECRET_API_KEY_VALUE
@@ -24,5 +25,8 @@ interface TMDBService {
 
     @GET
     suspend fun getSimilarMovies(@Url url:String, @Query(CONSTANTS_API_KEY) apiKey: String = SECRET_API_KEY_VALUE, @Query(CONSTANTS_PAGE) currentPageCount: Int) : ResponseSimilarMovie
+
+    @GET
+    suspend fun searchMovies(@Url url:String, @Query(CONSTANTS_API_KEY) apiKey: String = SECRET_API_KEY_VALUE, @Query(CONSTANTS_PAGE) currentPageCount: Int,@Query(CONSTANTS_MOVIE_SEARCH_QUERY) query: String) : ResponsePopularMovie
 
 }

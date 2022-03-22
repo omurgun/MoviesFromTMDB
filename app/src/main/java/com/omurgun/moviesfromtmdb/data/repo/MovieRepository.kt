@@ -1,13 +1,12 @@
 package com.omurgun.moviesfromtmdb.data.repo
 
-import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.CONSTANTS_MOVIE_IMAGES
 import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.GET_MOVIE
+import com.omurgun.moviesfromtmdb.application.constants.NetworkConstants.SEARCH_MOVIE
 import com.omurgun.moviesfromtmdb.data.local.room.dao.MovieDao
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
 import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
+import com.omurgun.moviesfromtmdb.data.models.request.RequestSearchMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
-import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovie
 import com.omurgun.moviesfromtmdb.data.remote.TMDBService
 import com.omurgun.moviesfromtmdb.domain.repoInterfaces.IMovieRepository
@@ -54,8 +53,9 @@ class MovieRepository @Inject constructor(
         return tmdbService.getPopularMovies(currentPageCount = requestGetPopularMovies.currentPageCount)
     }
 
-
-
+    override suspend fun searchMoviesFromAPI(requestSearchMovie: RequestSearchMovie): ResponsePopularMovie {
+        return tmdbService.searchMovies(SEARCH_MOVIE, currentPageCount = requestSearchMovie.currentPageCount,query = requestSearchMovie.query)
+    }
 
 
 }

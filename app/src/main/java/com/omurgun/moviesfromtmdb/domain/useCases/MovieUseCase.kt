@@ -2,10 +2,7 @@ package com.omurgun.moviesfromtmdb.domain.useCases
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieDetail
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetMovieImages
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetPopularMovies
-import com.omurgun.moviesfromtmdb.data.models.request.RequestGetSimilarMovies
+import com.omurgun.moviesfromtmdb.data.models.request.*
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovieImages
 import com.omurgun.moviesfromtmdb.data.models.response.ResponsePopularMovie
@@ -25,6 +22,18 @@ class MovieUseCase @Inject constructor(private val movieRepository: IMovieReposi
         try {
             emit(ResultData.Loading())
             val movie = movieRepository.getMovieDetailFromAPI(requestMovieDetail)
+            emit(ResultData.Success(movie))
+        } catch (e: HttpException) {
+            emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))
+        } catch (e: IOError) {
+            emit(ResultData.Exception(message = "Could not reach internet"))
+        }
+    }
+
+    fun searchMoviesFromAPI(requestSearchMovie: RequestSearchMovie) : Flow<ResultData<ResponsePopularMovie>> = flow {
+        try {
+            emit(ResultData.Loading())
+            val movie = movieRepository.searchMoviesFromAPI(requestSearchMovie)
             emit(ResultData.Success(movie))
         } catch (e: HttpException) {
             emit(ResultData.Exception(message = e.localizedMessage ?: "Error!"))

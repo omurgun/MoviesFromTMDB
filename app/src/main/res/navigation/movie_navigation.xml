@@ -45,5 +45,9 @@
         android:id="@+id/searchMovieFragment"
         android:name="com.omurgun.moviesfromtmdb.ui.fragments.SearchMovieFragment"
         android:label="fragment_search_movie"
-        tools:layout="@layout/fragment_search_movie" />
+        tools:layout="@layout/fragment_search_movie" >
+        <action
+            android:id="@+id/action_searchMovieFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
 </navigation>

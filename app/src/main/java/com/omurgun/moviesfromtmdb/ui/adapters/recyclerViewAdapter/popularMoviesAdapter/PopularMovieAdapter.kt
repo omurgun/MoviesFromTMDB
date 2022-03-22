@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.omurgun.moviesfromtmdb.data.models.response.ResponseMovie
 import com.omurgun.moviesfromtmdb.databinding.ItemPopularMovieBinding
 import com.omurgun.moviesfromtmdb.ui.fragments.PopularMoviesFragmentDirections
+import com.omurgun.moviesfromtmdb.ui.fragments.SearchMovieFragmentDirections
 
 
 class PopularMovieAdapter() : RecyclerView.Adapter<PopularMovieViewHolder>()
@@ -19,6 +20,8 @@ class PopularMovieAdapter() : RecyclerView.Adapter<PopularMovieViewHolder>()
             field = value
             notifyDataSetChanged()
         }
+
+    var isSearch : Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularMovieViewHolder {
       return PopularMovieViewHolder(ItemPopularMovieBinding.inflate(
@@ -32,8 +35,15 @@ class PopularMovieAdapter() : RecyclerView.Adapter<PopularMovieViewHolder>()
         holder.bind(popularMovies[position])
 
         holder.itemView.setOnClickListener {
-            val action = PopularMoviesFragmentDirections.actionPopularMoviesFragmentToMovieDetailFragment(popularMovies[position].id)
+
+            var action = PopularMoviesFragmentDirections.actionPopularMoviesFragmentToMovieDetailFragment(popularMovies[position].id)
+            if (isSearch)
+            {
+                action = SearchMovieFragmentDirections.actionSearchMovieFragmentToMovieDetailFragment(popularMovies[position].id)
+            }
             Navigation.findNavController(it).navigate(action)
+
+
         }
 
     }
